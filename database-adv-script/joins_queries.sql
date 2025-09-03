@@ -1,4 +1,4 @@
-_ _inner Join 
+-- INNER JOIN: Retrieve all bookings and the respective users who made those bookings
 SELECT 
     b.booking_id,
     b.property_id,
@@ -15,8 +15,8 @@ SELECT
 FROM bookings b
 INNER JOIN users u ON b.user_id = u.user_id;
 
-__Outer Join 
 
+-- LEFT JOIN: Retrieve all properties and their reviews, including properties with no reviews
 SELECT 
     p.property_id,
     p.name AS property_name,
@@ -29,11 +29,13 @@ SELECT
     r.comment,
     r.created_at AS review_date
 FROM properties p
-LEFT JOIN reviews r ON p.property_id = r.property_id;
+LEFT JOIN reviews r ON p.property_id = r.property_id
+ORDER BY p.property_id;
 
 
-__combination of   LEFT JOIN and aRIGHT JOIN with UNION to stimulate Full Joins.
-
+-- FULL OUTER JOIN (simulated in MySQL using UNION of LEFT and RIGHT JOIN)
+-- Note: MySQL does not support FULL OUTER JOIN directly.
+-- FULL OUTER JOIN equivalent in MySQL:
 SELECT 
     u.user_id,
     u.first_name,
