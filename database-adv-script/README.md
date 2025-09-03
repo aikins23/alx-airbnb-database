@@ -1,73 +1,166 @@
-# Complex Queries with Joins
+# Airbnb Database Advanced SQL Project
 
-This project focuses on mastering SQL joins by writing complex queries using different types of joins.
-
----
-
-## Objective
-- Learn how to use `INNER JOIN`, `LEFT JOIN`, and `FULL OUTER JOIN`.
-- Practice writing queries that handle linked and unlinked records between tables.
+## 📌 Project Overview
+This project focuses on writing **advanced SQL queries** for an Airbnb-like database system.  
+The goal is to practice and master **SQL joins**, **subqueries**, and **correlated subqueries** for efficient data analysis.
 
 ---
 
-## Instructions
+## 🎯 Objectives
+- Design a **relational database schema** for an Airbnb system using **MySQL**.
+- Write queries using:
+  - **INNER JOIN**
+  - **LEFT JOIN**
+  - **FULL OUTER JOIN** (simulated in MySQL).
+- Use **subqueries** and **correlated subqueries** for advanced filtering and analytics.
 
-1. **Write a query using an INNER JOIN**  
-   Retrieve all bookings and the respective users who made those bookings.
+---
 
-   ```sql
-   SELECT 
-       b.booking_id,
-       b.property_id,
-       b.booking_date,
-       u.user_id,
-       u.name,
-       u.email
-   FROM Bookings b
-   INNER JOIN Users u 
-       ON b.user_id = u.user_id;
-Write a query using a LEFT JOIN
-Retrieve all properties and their reviews, including properties that have no reviews.
+## 📂 Repository Structure
+- **Repository:** `alx-airbnb-database`
+- **Directory:** `database-adv-script`
+- **Files:**
+  - `joins_queries.sql` → contains all join queries.
+  - `subqueries.sql` → contains subqueries and correlated subqueries.
+  - `README.md` → project documentation.
 
-sql
-Copy code
+---
+
+## 🗂 Database Schema
+The main tables in the database are:
+
+- **`users`** → stores user details (guest, host, admin).
+- **`properties`** → stores property listings.
+- **`bookings`** → stores booking details.
+- **`payments`** → stores payment records.
+- **`reviews`** → stores user reviews of properties.
+- **`messages`** → stores messages between users.
+
+---
+
+## 🧩 SQL Queries
+
+### 1️⃣ INNER JOIN — Retrieve all bookings with respective user details
+```sql
+SELECT 
+    b.booking_id,
+    b.property_id,
+    b.start_date,
+    b.end_date,
+    b.total_price,
+    b.status,
+    u.user_id,
+    u.first_name,
+    u.last_name,
+    u.email
+FROM bookings b
+INNER JOIN users u ON b.user_id = u.user_id;
+```
+
+---
+
+### 2️⃣ LEFT JOIN — Retrieve all properties with reviews (including properties without reviews)
+```sql
 SELECT 
     p.property_id,
-    p.property_name,
+    p.name AS property_name,
     r.review_id,
     r.rating,
     r.comment
-FROM Properties p
-LEFT JOIN Reviews r 
-    ON p.property_id = r.property_id;
-Write a query using a FULL OUTER JOIN
-Retrieve all users and all bookings, even if the user has no booking or a booking is not linked to a user.
+FROM properties p
+LEFT JOIN reviews r ON p.property_id = r.property_id;
+```
 
-sql
-Copy code
+---
+
+### 3️⃣ FULL OUTER JOIN (Simulated in MySQL) — Retrieve all users and bookings
+```sql
 SELECT 
     u.user_id,
-    u.name,
+    u.first_name,
+    u.last_name,
     b.booking_id,
-    b.property_id,
-    b.booking_date
-FROM Users u
-FULL OUTER JOIN Bookings b 
-    ON u.user_id = b.user_id;
-Repository
-GitHub repository: alx-airbnb-database
+    b.start_date,
+    b.end_date
+FROM users u
+LEFT JOIN bookings b ON u.user_id = b.user_id
 
-Directory: database-adv-script
+UNION
 
-Files:
+SELECT 
+    u.user_id,
+    u.first_name,
+    u.last_name,
+    b.booking_id,
+    b.start_date,
+    b.end_date
+FROM users u
+RIGHT JOIN bookings b ON u.user_id = b.user_id;
+```
 
-joins_queries.sql
+---
 
-README.md
+### 4️⃣ Subquery — Find all properties with an average rating greater than 4.0
+```sql
+SELECT 
+    p.property_id,
+    p.name AS property_name,
+    p.location,
+    p.price_per_night
+FROM properties p
+WHERE p.property_id IN (
+    SELECT r.property_id
+    FROM reviews r
+    GROUP BY r.property_id
+    HAVING AVG(r.rating) > 4.0
+);
+```
 
-Notes
-Use sample data to test queries.
+---
 
-Ensure schema includes Users, Properties, Bookings, and Reviews tables.
+### 5️⃣ Correlated Subquery — Find users who have made more than 3 bookings
+```sql
+SELECT 
+    u.user_id,
+    u.first_name,
+    u.last_name,
+    u.email
+FROM users u
+WHERE (
+    SELECT COUNT(*)
+    FROM bookings b
+    WHERE b.user_id = u.user_id
+) > 3;
+```
 
-Queries should work in standard SQL environments (PostgreSQL recommended).
+---
+
+## 🚀 How to Run
+
+### 1. Create the database:
+```sql
+CREATE DATABASE airbnb_db;
+USE airbnb_db;
+```
+
+### 2. Create all tables:
+- Use the schema files to create the database tables.
+
+### 3. Insert sample data:
+- Populate the database with mock data.
+
+### 4. Run SQL scripts:
+```bash
+mysql -u root -p airbnb_db < joins_queries.sql
+mysql -u root -p airbnb_db < subqueries.sql
+```
+
+---
+
+## 👨‍💻 Author
+**Buabeng Emmanuel Aikins**  
+
+---
+
+## 🏷️ License
+This project is for educational purposes under the **MIT License**.
