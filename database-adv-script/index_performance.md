@@ -56,3 +56,6 @@ Indexes speed up lookups, filtering, and sorting operations. Focus on columns us
   - `(location, price)`  
 
 Indexes improve query performance but also add overhead on inserts and updates. Only index columns that are frequently queried.
+
+
+
