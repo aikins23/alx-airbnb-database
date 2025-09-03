@@ -56,3 +56,27 @@ Indexes speed up lookups, filtering, and sorting operations. Focus on columns us
   - `(location, price)`  
 
 Indexes improve query performance but also add overhead on inserts and updates. Only index columns that are frequently queried.
+
+
+--Measure the query performance before and after adding indexes using EXPLAIN or ANALYZE.
+
+--Find a user by email:
+EXPLAIN ANALYZE
+SELECT user_id, name
+FROM users
+WHERE email = 'example@mail.com';
+
+--Search properties by location and price:
+EXPLAIN ANALYZE
+SELECT property_id, name, price
+FROM properties
+WHERE location = 'Accra' AND price BETWEEN 100 AND 500
+ORDER BY price ASC;
+
+
+--Find all bookings for a user in a date range:
+EXPLAIN ANALYZE
+SELECT booking_id, booking_date, status
+FROM bookings
+WHERE user_id = 123 AND booking_date BETWEEN '2025-01-01' AND '2025-03-01';
+
