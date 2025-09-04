@@ -15,9 +15,10 @@ SELECT
     pay.status AS payment_status,
     pay.payment_date
 FROM bookings b
-INNER JOIN users u ON b.user_id = u.user_id
-INNER JOIN properties p ON b.property_id = p.property_id
-INNER JOIN payments pay ON b.booking_id = pay.booking_id;
+JOIN users u ON b.user_id = u.user_id
+JOIN properties p ON b.property_id = p.property_id
+JOIN payments pay ON b.booking_id = pay.booking_id;
+
 
 
 -- Analyze performance using EXPLAIN
